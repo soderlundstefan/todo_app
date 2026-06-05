@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TODO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #181818;
+      --border: #2e2e2e;
+      --accent: #c8f135;
+      --accent-dim: #8faa22;
+      --text: #e8e8e8;
+      --text-muted: #666;
+      --done-text: #444;
+      --danger: #ff4d4d;
+      --radius: 4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans SC', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      max-width: 580px;
+      margin-bottom: 48px;
+    }
+    .header-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -2px;
+      color: var(--text);
+    }
+    h1 span { color: var(--accent); }
+
+    /* Stats bar */
+    .stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .stat {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .stat strong {
+      color: var(--accent);
+      font-size: 16px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Input */
+    .input-row {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    input[type="text"] {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 15px;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]::placeholder { color: var(--text-muted); }
+    input[type="text"]:focus { border-color: var(--accent); }
+
+    .btn-add {
+      background: var(--accent);
+      color: #0f0f0f;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 13px 22px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn-add:hover { background: #d9ff40; }
+    .btn-add:active { transform: scale(0.97); }
+
+    /* Filter tabs */
+    .filters {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      gap: 2px;
+      margin-bottom: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+    }
+    .filter-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active {
+      background: var(--accent);
+      color: #0f0f0f;
+      font-weight: 700;
+    }
+
+    /* Todo list */
+    .todo-list {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      transition: border-color 0.2s, opacity 0.2s;
+      animation: slideIn 0.2s ease;
+    }
+    .todo-item:hover { border-color: #3e3e3e; }
+    .todo-item.done { opacity: 0.55; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Checkbox */
+    .check-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s, background 0.15s;
+      font-size: 11px;
+    }
+    .check-btn:hover { border-color: var(--accent); }
+    .todo-item.done .check-btn {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f0f0f;
+    }
+
+    .todo-title {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--text);
+      transition: color 0.2s;
+      word-break: break-all;
+    }
+    .todo-item.done .todo-title {
+      color: var(--done-text);
+      text-decoration: line-through;
+    }
+
+    .btn-del {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 0.15s, border-color 0.15s;
+      line-height: 1;
+    }
+    .btn-del:hover { color: var(--danger); border-color: var(--danger); }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--text-muted);
+    }
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+    .empty p {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+      z-index: 99;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { border-color: var(--danger); color: var(--danger); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">// TASK MANAGER</div>
+  <h1>TODO<span>.</span></h1>
+  <div class="stats">
+    <div class="stat"><strong id="stat-total">0</strong>全部</div>
+    <div class="stat"><strong id="stat-active">0</strong>待完成</div>
+    <div class="stat"><strong id="stat-done">0</strong>已完成</div>
+  </div>
+</header>
+
+<div class="input-row">
+  <input type="text" id="new-task" placeholder="输入新任务，按 Enter 添加…" maxlength="100"/>
+  <button class="btn-add" onclick="addTodo()">+ 添加</button>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all"  onclick="setFilter('all')">全部</button>
+  <button class="filter-btn"        data-filter="active" onclick="setFilter('active')">待完成</button>
+  <button class="filter-btn"        data-filter="done"   onclick="setFilter('done')">已完成</button>
+</div>
+
+<div class="todo-list" id="todo-list"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let todos = [];
+  let filter = 'all';
+
+  // ── API helpers ──────────────────────────────────────────
+  async function apiFetch(url, opts = {}) {
+    const res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+      ...opts
+    });
+    return res.json();
+  }
+
+  // ── Load ─────────────────────────────────────────────────
+  async function loadTodos() {
+    todos = await apiFetch('/api/todos');
+    render();
+  }
+
+  // ── Add ──────────────────────────────────────────────────
+  async function addTodo() {
+    const inp = document.getElementById('new-task');
+    const title = inp.value.trim();
+    if (!title) { showToast('请输入任务内容', true); return; }
+    const todo = await apiFetch('/api/todos', {
+      method: 'POST',
+      body: JSON.stringify({ title })
+    });
+    if (todo.error) { showToast(todo.error, true); return; }
+    todos.unshift(todo);
+    inp.value = '';
+    render();
+    showToast('✓ 任务已添加');
+  }
+
+  // ── Toggle ───────────────────────────────────────────────
+  async function toggleTodo(id) {
+    const updated = await apiFetch(`/api/todos/${id}/toggle`, { method: 'PATCH' });
+    todos = todos.map(t => t.id === id ? updated : t);
+    render();
+  }
+
+  // ── Delete ───────────────────────────────────────────────
+  async function deleteTodo(id) {
+    await apiFetch(`/api/todos/${id}`, { method: 'DELETE' });
+    todos = todos.filter(t => t.id !== id);
+    render();
+    showToast('任务已删除');
+  }
+
+  // ── Filter ───────────────────────────────────────────────
+  function setFilter(f) {
+    filter = f;
+    document.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === f));
+    render();
+  }
+
+  // ── Render ───────────────────────────────────────────────
+  function render() {
+    const list = document.getElementById('todo-list');
+    const visible = todos.filter(t =>
+      filter === 'all'    ? true :
+      filter === 'active' ? !t.done :
+                             t.done
+    );
+
+    document.getElementById('stat-total').textContent  = todos.length;
+    document.getElementById('stat-active').textContent = todos.filter(t => !t.done).length;
+    document.getElementById('stat-done').textContent   = todos.filter(t =>  t.done).length;
+
+    if (!visible.length) {
+      list.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">◎</div>
+          <p>${filter === 'done' ? 'NO COMPLETED TASKS' : 'NO TASKS YET'}</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = visible.map(t => `
+      <div class="todo-item ${t.done ? 'done' : ''}" id="item-${t.id}">
+        <button class="check-btn" onclick="toggleTodo(${t.id})" title="切换完成状态">
+          ${t.done ? '✓' : ''}
+        </button>
+        <span class="todo-title">${escHtml(t.title)}</span>
+        <button class="btn-del" onclick="deleteTodo(${t.id})" title="删除">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // ── Utils ────────────────────────────────────────────────
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  let toastTimer;
+  function showToast(msg, error = false) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (error ? ' error' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // Enter 键提交
+  document.getElementById('new-task').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTodo();
+  });
+
+  loadTodos();
+</script>
+</body>
+</html>
