@@ -38,7 +38,6 @@ http://127.0.0.1:5000
 todo_app/
 ├── app.py
 ├── db.py
-├── todos.db
 ├── requirements.txt
 ├── README.md
 └── templates/
