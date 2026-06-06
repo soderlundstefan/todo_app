@@ -1,37 +1,27 @@
-# Python 缓存文件
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
-*.pyc
-*.pyo
 
-# 虚拟环境
+# Virtual environments
 venv/
 env/
 ENV/
 .venv/
-env.bak/
-venv.bak/
 
-# 数据和配置文件（根据你的情况选择）
-todos.db        # ← 强烈建议忽略，避免上传用户数据
+# Runtime data
+todo.db
 *.log
-config.ini
-secrets.json
-.env
 
-# IDE 和编辑器文件
+# Environment variables and secrets
+.env
+secrets.json
+config.ini
+
+# IDE files
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
-# 系统文件
+# System files
 .DS_Store
 Thumbs.db
-
-# 项目构建或临时文件
-__pycache__/
-instance/
-.webassets-cache
