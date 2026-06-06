@@ -26,6 +26,8 @@ pip install -r requirements.txt
 python app.py
 ```
 
+**The SQLite database file `todo.db` will be created automatically when the app starts.**
+
 Open:
 
 ```text

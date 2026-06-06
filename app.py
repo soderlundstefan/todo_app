@@ -10,6 +10,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+
 @app.route("/api/todos", methods=["GET"])
 def get_todos():
     todos = db.get_all_todos()
