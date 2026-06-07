@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import db
+import os
 
 app = Flask(__name__)
 db.init_db()
@@ -54,4 +55,11 @@ def delete_todo(todo_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    port = int(os.getenv("PORT", 5000))
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=debug
+    )

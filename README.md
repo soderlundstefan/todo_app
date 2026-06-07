@@ -19,11 +19,29 @@ A simple Todo web application built with Flask.
 - JavaScript
 - SQLite
 
+## Environment Variables
+
+Create a `.env` file based on `.env.example` if needed.
+
+```env
+FLASK_DEBUG=false
+PORT=5000
+SECRET_KEY=change-me
+```
+
 ## How to Run
+
+**Development Run**
 
 ```bash
 pip install -r requirements.txt
 python app.py
+```
+**Production Run**
+
+```bash
+pip install -r requirements.txt
+gunicorn app:app
 ```
 
 **The SQLite database file `todo.db` will be created automatically when the app starts.**
