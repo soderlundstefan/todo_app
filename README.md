@@ -21,7 +21,7 @@ A simple Todo web application built with Flask.
 
 ## Environment Variables
 
-Create a `.env` file based on `.env.example` if needed.
+Create a `.env` file based on `.env.example` if needed. The app loads local environment variables with `python-dotenv`.
 
 ```env
 FLASK_DEBUG=false
