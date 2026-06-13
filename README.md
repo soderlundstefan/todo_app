@@ -68,12 +68,10 @@ https://nianzhuji.com
 
 ## Screenshots
 
-```md
 ![Home Page](docs/home.png)
 ![Todo-Add](docs/todo-add.png)
 ![Todo-Toggle](docs/todo-toggle.png)
 ![Todo-Delete](docs/todo-delete.png)
-```
 
 ---
 
